@@ -13,7 +13,7 @@
 # AWS S3 bucket can be used instead of local drive for artifacts store via
 # commented-out environment lines below.
 
-version: '3.3'
+version: '3.8'
 
 services:
     db:
@@ -25,8 +25,6 @@ services:
         networks:
             - backend
         environment:
-            - MUID=$UID
-            - MGID=$GID
             - POSTGRES_DB=${DB_NAME}
             - POSTGRES_USER=${DB_USER}
             - POSTGRES_PASSWORD=${DB_PW}
@@ -44,23 +42,18 @@ services:
             - frontend
             - backend
         environment:
-            - BACKEND=postgresql://${DB_USER}:${DB_PW}@db:${DB_PORT}/${DB_NAME}
+            - BACKEND=postgresql+psycopg2://${DB_USER}:${DB_PW}@db/${DB_NAME}
             - ARTIFACTS=/mlruns
-          # For artifact store in AWS S3 (note boto was installed in container):
-          #  - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-          #  - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-          #  - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
-          #  - ARTIFACTS="s3://mlflow_bucket/mlflow/"
         volumes:
             - mlrun_data:/mlruns
             - condenv:/opt/conda
-        command: 
-            - sh    # (sh allows for var substitution of BACKEND and ARTIFACTS)
+        command:
+            - sh
             - -c
             - mlflow server 
-                --port 5001  # port inside container, different from $MLFLOW_PORT
+                --port 5001
                 --host 0.0.0.0 
-                --backend-store-uri $${BACKEND} 
+                --backend-store-uri $${BACKEND}
                 --default-artifact-root $${ARTIFACTS}
         depends_on:
             - db
