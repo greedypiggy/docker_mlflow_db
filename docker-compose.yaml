@@ -54,7 +54,8 @@ services:
                 --port 5001
                 --host 0.0.0.0 
                 --backend-store-uri $${BACKEND}
-                --default-artifact-root $${ARTIFACTS}
+                --serve-artifacts
+                --artifacts-destination $${ARTIFACTS}
         depends_on:
             - db
 
