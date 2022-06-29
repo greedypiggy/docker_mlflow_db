@@ -43,7 +43,10 @@ services:
             - backend
         environment:
             - BACKEND=postgresql+psycopg2://${DB_USER}:${DB_PW}@db/${DB_NAME}
-            - ARTIFACTS=/mlruns
+            - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+            - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+            - ARTIFACTS="s3://mlflow-test-13/mlflow/"
         volumes:
             - mlrun_data:/mlruns
             - condenv:/opt/conda
