@@ -46,7 +46,6 @@ services:
             - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
             - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
             - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
-            - ARTIFACTS="s3://mlflow-test-13/mlflow/"
         volumes:
             - mlrun_data:/mlruns
             - condenv:/opt/conda
@@ -58,7 +57,7 @@ services:
                 --host 0.0.0.0 
                 --backend-store-uri $${BACKEND}
                 --serve-artifacts
-                --artifacts-destination $${ARTIFACTS}
+                --artifacts-destination s3://mlflow-test-13/mlartifacts
         depends_on:
             - db
 
